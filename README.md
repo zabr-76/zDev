@@ -2,8 +2,8 @@
 
 > Micro-framework reactivo sin Virtual DOM - Creado para facilitar la programación a usuarios novatos
 
-[![Size](https://img.shields.io/badge/size-%3C9KB%20gzip-brightgreen.svg)](https://github.com/yourusername/zdev)
-[![Version](https://img.shields.io/badge/version-1.2-blue.svg)](https://github.com/yourusername/zdev)
+[![Size](https://img.shields.io/badge/size-%3C9KB%20gzip-brightgreen.svg)](https://github.com/zabr-76/zDev)
+[![Version](https://img.shields.io/badge/version-1.2-blue.svg)](https://github.com/zabr-76/zDev)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🚀 Características
@@ -202,7 +202,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ## 🙏 Agradecimientos
 
 - Creado por **Zenón A. Bastidas R.** en 2018
-- Inspirado en la simplicidad de frameworks como Alpine.js
+- Inspirado en la simplicidad de frameworks reactivos
 - Diseñado para principiantes y desarrolladores experimentados
 
 ## 📊 Especificaciones
@@ -222,6 +222,6 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
   <p>
     <a href="https://yourusername.github.io/zdev/">📚 Documentación</a> •
     <a href="https://yourusername.github.io/zdev/demo/">🎮 Demo</a> •
-    <a href="https://github.com/yourusername/zdev">⭐ GitHub</a>
+    <a href="https://github.com/zabr-76/zDev">⭐ GitHub</a>
   </p>
 </div>
