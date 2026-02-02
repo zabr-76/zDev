@@ -2,9 +2,9 @@
 
 > Micro-framework reactivo sin Virtual DOM - Reactividad simplificada para todos
 
-[![Size](https://img.shields.io/badge/size-%3C10KB%20gzip-brightgreen.svg)](https://github.com/zabr-76/zDev)
-[![Version](https://img.shields.io/badge/version-2.0-blue.svg)](https://github.com/zabr-76/zDev)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Size](https://img.shields.io/badge/size-%3C10KB%20gzip-brightgreen.svg )](https://github.com/zabr-76/zDev )
+[![Version](https://img.shields.io/badge/version-2.0-blue.svg )](https://github.com/zabr-76/zDev )
+[![License](https://img.shields.io/badge/license-MIT-green.svg )](LICENSE)
 
 ## 🚀 Características
 
@@ -13,18 +13,49 @@
 - **🔄 Reactividad Real** - Signals con suscripción automática
 - **🎨 useComputed** - Clases dinámicas sin complejidad
 - **📱 Mobile First** - Diseñado para apps modernas
+- **🧭 Router Enterprise** - History API + navegación SPA completa
 - **📦 ~10KB gzip** - Extremadamente ligero
 
 ## 📦 Instalación
 
+### Módulos ES6 (Recomendado)
+
+```javascript
+import zDev from './utils/zdev.js';
+const { useSignal, useComputed, html, renderReactive, useEffect, useRouter, useForm, useDebounce } = zDev;
+```
+
+### CDN (Prototipado Rápido)
+
 ```html
-<script src="zdev.js"></script>
+<script type="module">
+  import zDev from 'https://cdn.jsdelivr.net/gh/zabr-76/zdev@latest/zdev.js';
+</script>
+```
+
+### Estructura de Proyecto
+
+```text
+mi-app/
+├── index.html
+├── main.js
+├── style.css
+├── utils/
+│   └── zdev.js          # Framework core
+├── pages/
+│   ├── home.js
+│   ├── about.js
+│   └── dashboard.js
+└── components/
+    ├── header.js
+    ├── sidebar.js
+    └── chat.js
 ```
 
 ## 🎯 Primeros Pasos
 
 ```javascript
-const { html, renderReactive, useSignal, useComputed } = zDev;
+const { html, renderReactive, useSignal, useComputed, useEffect } = zDev;
 
 const App = () => {
   const [count, setCount] = useSignal(0);
@@ -34,6 +65,13 @@ const App = () => {
   const cardClass = useComputed(() => 
     isVip() ? 'card vip' : 'card'
   );
+
+  // Efecto con cleanup
+  useEffect(() => {
+    console.log('Count cambió a:', count());
+    const timer = setTimeout(() => console.log('Debounce effect'), 1000);
+    return () => clearTimeout(timer);
+  }, [count]);
 
   return html`
     <div class="${cardClass}">           <!-- ✅ Atributo: sin () => -->
@@ -55,25 +93,81 @@ renderReactive('#app', App);
 
 ## 🔥 Novedades v2.0
 
-### useComputed - Clases Dinámicas Simplificadas
+### useEffect Mejorado - Performance Enterprise
 
 ```javascript
-// Antes (v1.x):
-class="${() => isActive() ? 'active' : ''}"
+// Antes (v1.x): Usaba JSON.stringify para comparar deps (lento)
+// Ahora (v2.0): Tracking nativo de señales con WeakMap
 
-// Ahora (v2.0):
-const itemClass = useComputed(() => isActive() ? 'active' : '');
-// ...
-class="${itemClass}"  // Más limpio, mejor performance
+useEffect(() => {
+  // Se ejecuta solo cuando 'user' cambia de valor
+  fetchUserData(user());
+  return () => cancelRequest();
+}, [user]); // user es una señal - comparación por referencia, no por JSON
 ```
 
-### Reglas de Reactividad Claras
+### useRouter - SPA Enterprise Grade
 
-| Contexto | Sintaxis | Ejemplo |
-|----------|----------|---------|
-| **Atributos HTML** | `${signal}` | `class="${itemClass}"` |
-| **Texto/Contenido** | `${() => signal()}` | `Count: ${() => count()}` |
-| **Condicionales** | `${() => cond && html``}` | `${() => show() && html`...`}` |
+```javascript
+const router = useRouter([
+  { route: '/', component: HomePage },
+  { route: '/user/:id', component: UserProfile },
+  { route: '/dashboard/*', component: Dashboard },
+  { route: '*', component: NotFound }
+], { type: 'history' }); // History API (no hash)
+
+// Uso
+router.navigate('/user/123');
+router.navigate('/user/:id', { params: { id: 456 } });
+router.back();
+
+// En template
+html`<a href="/about" onclick=${(e) => { e.preventDefault(); router.navigate('/about'); }}>About</a>`
+```
+
+### useForm - Manejo de Formularios Completo
+
+```javascript
+const form = useForm({
+  initialValues: { email: '', password: '' },
+  validate: {
+    email: [
+      useForm.validators.required('Email requerido'),
+      useForm.validators.email('Email inválido')
+    ],
+    password: useForm.validators.minLength(6, 'Mínimo 6 caracteres')
+  },
+  onSubmit: async (values) => {
+    await api.login(values);
+  }
+});
+
+// En template
+html`
+  <form onsubmit=${form.handleSubmit}>
+    <input type="email" ...${form.register('email')} />
+    ${() => form.errors().email && html`<span class="error">${form.errors().email}</span>`}
+    
+    <input type="password" ...${form.register('password')} />
+    
+    <button type="submit" disabled=${() => form.isSubmitting()}>
+      ${() => form.isSubmitting() ? 'Enviando...' : 'Enviar'}
+    </button>
+  </form>
+`
+```
+
+### useDebounce - Inputs de Búsqueda
+
+```javascript
+const [search, setSearch] = useSignal('');
+const debouncedSearch = useDebounce(search, 300);
+
+// Solo busca después de 300ms sin escribir
+useEffect(() => {
+  performSearch(debouncedSearch());
+}, [debouncedSearch]);
+```
 
 ## 📚 API Core
 
@@ -93,6 +187,36 @@ const fullName = useComputed(() =>
 // Uso: class="${fullName}" (sin () =>)
 ```
 
+### useEffect(fn, [deps])
+```javascript
+useEffect(() => {
+  console.log('Efecto');
+  return () => console.log('Cleanup');
+}, [dependency]);
+```
+
+### useRouter(routes, options)
+```javascript
+const { navigate, RouterView, back, params, query } = useRouter([
+  { route: '/', component: Home },
+  { route: '/user/:id', component: User }
+], { type: 'history', base: '/app' });
+```
+
+### useForm(config)
+```javascript
+const { values, errors, handleSubmit, register, reset } = useForm({
+  initialValues: {},
+  validate: {},
+  onSubmit: fn
+});
+```
+
+### useDebounce(value, delay)
+```javascript
+const debounced = useDebounce(signal, 300);
+```
+
 ### html`...` - Template literals reactivos
 ```javascript
 const view = html`
@@ -106,7 +230,7 @@ const view = html`
 ```javascript
 ${List(
   todos,
-  (todo) => TodoItem(todo),
+  (todo) => html`<li>${todo.text}</li>`,
   (todo) => todo.id
 )}
 ```
@@ -123,24 +247,25 @@ useStyle(`
 
 ### ✅ Separa en Componentes
 
-Evita mezclar `List()` con lógica reactiva compleja en el mismo template:
-
 ```javascript
-// ❌ Mal: Todo junto causa bugs
-const App = () => html`
+// ✅ Bien: Componentes aislados
+const ItemList = () => html`
   <div>
-    ${List(items, Item, i => i.id)}
-    ${() => { /* lógica que se mezcla con List */ }}
+    ${List(items, ItemComponent, item => item.id)}
   </div>
 `;
 
-// ✅ Bien: Componentes aislados
-const App = () => html`
-  <div>
-    ${ItemList()}
-    ${ActiveDetail()}  // Separado, no se mezcla
-  </div>
-`;
+const ItemComponent = (item) => {
+  const itemClass = useComputed(() => 
+    item.active ? 'item active' : 'item'
+  );
+  
+  return html`
+    <div class="${itemClass}">
+      ${item.name}
+    </div>
+  `;
+};
 ```
 
 ### ✅ useComputed para Atributos
@@ -151,23 +276,31 @@ const buttonClass = useComputed(() =>
 );
 
 return html`
-  <button class="${buttonClass}">  <!-- Sin () => -->
+  <button class="${buttonClass}">
     Click
   </button>
 `;
 ```
 
-### ✅ Funciones Flecha para Contenido
+### ✅ Cleanup en useEffect
 
 ```javascript
-return html`
-  <div>
-    ${() => userName()}           <!-- Texto dinámico -->
-    ${() => isAdmin() && html`   <!-- Condicional -->
-      <span>Admin</span>
-    `}
-  </div>
-`;
+useEffect(() => {
+  const controller = new AbortController();
+  fetch(url, { signal: controller.signal });
+  return () => controller.abort();
+}, [url]);
+```
+
+### ✅ Router Cleanup
+
+```javascript
+const router = useRouter(routes);
+
+// En unmount o cambio de layout
+window.addEventListener('beforeunload', () => {
+  router.cleanup();
+});
 ```
 
 ## 🎮 Demo
@@ -178,6 +311,7 @@ Aplicación de chat completa incluida en `/demo`:
 - 📱 Diseño responsive
 - 💬 Scroll suave con animaciones
 - 🔄 Estados reactivos complejos
+- 🧭 Navegación SPA con useRouter
 
 ```bash
 cd demo/
@@ -194,4 +328,6 @@ MIT - Creado por **Zenón A. Bastidas R.** (2018-2024)
 <div align="center">
   <p><strong>zDev v2.0</strong> - Reactividad sin complejidad 🚀</p>
 </div>
+```
 
+---
