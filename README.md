@@ -328,6 +328,5 @@ MIT - Creado por **Zenón A. Bastidas R.** (2018-2024)
 <div align="center">
   <p><strong>zDev v2.0</strong> - Reactividad sin complejidad 🚀</p>
 </div>
-```
 
 ---
