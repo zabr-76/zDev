@@ -1,4 +1,4 @@
-yo# ⚡ zDev Framework v2.0
+# ⚡ zDev Framework v2.0
 
 > Micro-framework reactivo sin Virtual DOM - Reactividad simplificada para todos
 
