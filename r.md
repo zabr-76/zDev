@@ -232,6 +232,5 @@ MIT © **Zenón A. Bastidas R.** (2018-2026)
     <p><strong>zDev v2.0</strong> - <em>Reactividad sin complejidad</em> 🚀</p>
     <a href="https://cdn.jsdelivr.net/gh/zabr-76/zDev@latest/dist/zdev.all.js">🚀 Probar CDN</a>
 </div>
-```
 
 
