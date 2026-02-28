@@ -33,7 +33,7 @@
 
 ### **3. MAGIC 1-Línea (Todo zDev)**
 ```html
-<script src="https://cdn.jsdelivr.net/gh/zabr-76/zDev@latest/dist/zdev.all.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/zabr-76/zDev@latest/dist/zdev.js"></script>
 ```
 
 ## 🎯 Primeros Pasos
