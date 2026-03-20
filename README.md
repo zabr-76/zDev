@@ -29,7 +29,7 @@ const { useSignal, useComputed, html, renderReactive, useEffect, useRouter, useF
 
 ```html
 <script type="module">
-  import zDev from 'https://cdn.jsdelivr.net/gh/zabr-76/zdev@latest/zdev.js';
+  import zDev from 'https://cdn.jsdelivr.net/gh/zabr-76/zDev@latest/dist/zdev.js';
 </script>
 ```
 
